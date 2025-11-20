@@ -1,0 +1,107 @@
+===========================================
+Stay Balanced – Project Setup Instructions
+===========================================
+
+Follow these steps to get the project running on your computer.  
+Please read everything carefully so we’re all working in the same environment.
+
+-------------------------------------------
+1. Make sure you have Python installed
+-------------------------------------------
+We are using Python 3.x.  
+You can check your version by running:
+
+python --version
+
+If you don’t have Python installed, download it at:
+https://www.python.org/downloads/
+
+
+-------------------------------------------
+2. Create a virtual environment (only once)
+-------------------------------------------
+A virtual environment keeps all our project packages separate.
+
+Run this in the project folder:
+
+python -m venv venv
+
+
+-------------------------------------------
+3. Activate the virtual environment
+-------------------------------------------
+Windows (PowerShell):
+venv\Scripts\activate
+
+Mac/Linux:
+source venv/bin/activate
+
+You’ll know it’s activated because your terminal will show:
+(venv) at the start of the line.
+
+
+-------------------------------------------
+4. Install all required Python packages
+-------------------------------------------
+Once the venv is active, run:
+
+pip install -r requirements.txt
+
+This will install Flask, SQLAlchemy, and anything else the project needs.
+
+If this ever breaks, just ask before installing random packages.
+
+
+-------------------------------------------
+5. Seed the database (test data)
+-------------------------------------------
+We do NOT commit the database file to GitHub.
+
+Instead, run this to create the database and insert test users, meals, and workouts:
+
+python seed.py
+
+You should see messages like:
+"Seeding complete. Users: 2, Meals: X, Workouts: Y"
+
+If something looks wrong, delete "fitmeal.db" and run seed.py again.
+
+
+-------------------------------------------
+6. Run the Flask app
+-------------------------------------------
+Make sure your venv is active, then:
+
+python app.py
+
+Now open your browser and go to:
+
+http://127.0.0.1:5000/
+
+This will load the home page.
+
+
+-------------------------------------------
+7. Current pages in the project
+-------------------------------------------
+/            -> Home
+/fitness     -> Fitness planner page (placeholder)
+/meals       -> Shows the seeded MealEntry data
+/stats       -> Stats page (placeholder)
+/profile     -> Profile page (placeholder)
+
+More functionality will be added as we progress.
+
+
+-------------------------------------------
+8. Important notes
+-------------------------------------------
+- DO NOT commit the venv folder or any .db files.
+- The database file (fitmeal.db) is created locally on each machine.
+- If your database breaks, just delete fitmeal.db and run seed.py again.
+- Always activate your virtual environment before installing packages or running the app.
+- Pull updates from GitHub before starting work each day.
+
+-------------------------------------------
+That’s it!
+-------------------------------------------

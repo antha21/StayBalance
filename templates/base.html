@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stay Balanced | Learn. Train. Enjoy.</title>
+  <title>{% block title %}Stay Balanced{% endblock %}</title>
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
   <style>
     /* Global Styles */
     * {
@@ -34,62 +36,74 @@
 
     /* Navbar */
     nav {
-      background-color: #212529;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
+    background-color: #212529;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
 
-    nav .logo {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #00c897;
-      letter-spacing: 1px;
-    }
+/* 3-column layout */
+.nav-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* left | center | right */
+    align-items: center;
+}
 
-    nav ul {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-      align-items: center;
-    }
+/* Left side (logo) */
+.nav-left-side {
+    justify-self: start;
+}
 
-    nav ul.nav-left {
-      margin: 0 auto; /* Center menu */
-    }
+.logo {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #00c897;
+}
 
-    nav ul li a {
-      color: white;
-      font-weight: 500;
-      padding: 0.25rem 0;
-      position: relative;
-      transition: color 0.3s;
-    }
+/* Center menu */
+.nav-center {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+}
 
-    nav ul li a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      left: 0;
-      bottom: -4px;
-      background-color: #00c897;
-      transition: width 0.3s;
-    }
+/* Right side (Profile) */
+.nav-right {
+    list-style: none;
+    display: flex;
+    justify-content: end;
+}
 
-    nav ul li a:hover::after {
-      width: 100%;
-    }
+/* Links styling */
+nav li a {
+    color: white;
+    font-weight: 500;
+    padding: 0.25rem 0;
+    position: relative;
+    transition: color 0.3s;
+}
 
-    nav ul li a:hover {
-      color: #00c897;
-    }
+nav li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    left: 0;
+    bottom: -4px;
+    background-color: #00c897;
+    transition: width 0.3s;
+}
+
+nav li a:hover::after {
+    width: 100%;
+}
+
+nav li a:hover {
+    color: #00c897;
+}
 
     /* Hero Section */
     .hero {
@@ -99,7 +113,6 @@
       justify-content: center;
       text-align: center;
       padding: 6rem 2rem;
-      /* Static gradient */
       background: linear-gradient(135deg, #00c897, #007bff);
       color: white;
     }
@@ -284,50 +297,27 @@
 <body>
   <!-- Navbar -->
   <nav>
-    <div class="logo">Stay Balanced</div>
-    <ul class="nav-left">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Fitness</a></li>
-      <li><a href="#">Meals</a></li>
-      <li><a href="#">Stats</a></li>
-    </ul>
-    <ul class="nav-right">
-      <li><a href="#">Profile</a></li>
-    </ul>
-  </nav>
+    <div class="nav-container">
+        <div class="nav-left-side">
+            <div class="logo">Stay Balanced</div>
+        </div>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Learn. Train. Enjoy.</h1>
-    <p>Stay Balanced makes fitness fun and educational. Track workouts, plan meals, and watch your progress in a gamified, interactive way!</p>
-    <button>Start Your Journey</button>
-  </section>
+        <ul class="nav-center">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('fitness') }}">Fitness</a></li>
+            <li><a href="{{ url_for('meals') }}">Meals</a></li>
+            <li><a href="{{ url_for('stats') }}">Stats</a></li>
+        </ul>
 
-  <!-- Video Section -->
-  <section class="video-section">
-    <h2>Watch Our Introduction</h2>
-    <p>See how Stay Balanced transforms your health routine into a lifestyle you love.</p>
-    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-  </section>
+        <ul class="nav-right">
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+        </ul>
+    </div>
+</nav>
 
-  <!-- Info Section -->
-  <section class="info">
-    <div class="info-box">
-      <i class="fas fa-dumbbell"></i>
-      <h3>Personalized Fitness</h3>
-      <p>Take our fitness survey to build a plan that suits your goals and lifestyle. No more boring one-size-fits-all workouts!</p>
-    </div>
-    <div class="info-box">
-      <i class="fas fa-apple-alt"></i>
-      <h3>Smart Meal Planner</h3>
-      <p>Plan your meals with our nutrition tracker. Hit your macros, track your calories, and enjoy tasty, healthy meals!</p>
-    </div>
-    <div class="info-box">
-      <i class="fas fa-chart-line"></i>
-      <h3>Track & Celebrate</h3>
-      <p>Visualize your progress through interactive stats and charts that make your journey fun and rewarding!</p>
-    </div>
-  </section>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
   <!-- Footer -->
   <footer>
