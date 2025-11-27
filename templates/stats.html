@@ -1,6 +1,312 @@
 {% extends "base.html" %}
+
 {% block title %}Stats & Progress | Stay Balanced{% endblock %}
+
 {% block content %}
-  <h1>Stats & Progress</h1>
-  <p>Fitness stats and meal progress will show here.</p>
+
+<div style="max-width: 1100px; margin: 3rem auto; padding: 0 1.5rem;">
+
+  <!-- Gradient Header -->
+  <section style="
+    background: linear-gradient(135deg, #00c897, #007bff);
+    padding: 2.5rem 1.75rem;
+    color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    margin-bottom: 2.5rem;
+  ">
+    <h1 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem;">
+      Stats & Progress
+    </h1>
+    <p style="max-width: 720px; font-size: 0.98rem; line-height: 1.6; opacity: 0.95;">
+      Get a quick overview of your recent workouts and meals so you can stay balanced,
+      hit your goals, and see your progress over time.
+    </p>
+  </section>
+
+  {% if no_user %}
+    <!-- No user / not logged in state -->
+    <section style="
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      text-align: center;
+    ">
+      <h2 style="font-size: 1.4rem; margin-bottom: 0.75rem; color:#212529;">
+        Stats Unavailable
+      </h2>
+      <p style="color:#555; font-size:0.95rem; max-width: 520px; margin: 0 auto;">
+        Once the login system is implemented and you're signed in, this page will show
+        your personalized fitness and nutrition stats based on your recent activity.
+      </p>
+    </section>
+  {% else %}
+
+  <!-- Summary Cards Row -->
+  <section style="
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  ">
+
+    <!-- Card 1 -->
+    <div style="
+      background:#fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      padding: 1.2rem 1.1rem 1.4rem;
+    ">
+      <div style="
+        height: 5px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(90deg, #007bff, #00c897);
+      "></div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:0.9rem; color:#777;">Calories Today</h3>
+        <i class="fas fa-fire" style="color:#ff9800; font-size:1.1rem;"></i>
+      </div>
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#00c897;">
+        {{ calories_today }}
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div style="
+      background:#fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      padding: 1.2rem 1.1rem 1.4rem;
+    ">
+      <div style="
+        height: 5px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(90deg, #00c897, #007bff);
+      "></div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:0.9rem; color:#777;">Protein Today (g)</h3>
+        <i class="fas fa-drumstick-bite" style="color:#00c897; font-size:1.1rem;"></i>
+      </div>
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#007bff;">
+        {{ protein_today }}
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div style="
+      background:#fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      padding: 1.2rem 1.1rem 1.4rem;
+    ">
+      <div style="
+        height: 5px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(90deg, #007bff, #00c897);
+      "></div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:0.9rem; color:#777;">Workouts (Last 7 Days)</h3>
+        <i class="fas fa-dumbbell" style="color:#007bff; font-size:1.1rem;"></i>
+      </div>
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#00c897;">
+        {{ workouts_last_week }}
+      </p>
+    </div>
+
+    <!-- Card 4 -->
+    <div style="
+      background:#fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      padding: 1.2rem 1.1rem 1.4rem;
+    ">
+      <div style="
+        height: 5px;
+        border-radius: 999px;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(90deg, #00c897, #007bff);
+      "></div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:0.9rem; color:#777;">Workout Minutes (7 Days)</h3>
+        <i class="fas fa-stopwatch" style="color:#ff9800; font-size:1.1rem;"></i>
+      </div>
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#007bff;">
+        {{ workout_minutes_last_week }}
+      </p>
+    </div>
+
+  </section>
+
+  {% if profile %}
+  <!-- Goals vs Actual + Profile Snapshot -->
+  <section style="
+    display:grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    margin-bottom: 2.75rem;
+  ">
+    <!-- Goals vs Today -->
+    <div style="
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.06);
+      padding:1.7rem 1.5rem;
+    ">
+      <h2 style="font-size:1.2rem; font-weight:600; margin-bottom:0.5rem; color:#212529;">
+        Daily Nutrition vs Goal
+      </h2>
+      <p style="color:#666; font-size:0.9rem; margin-bottom:1rem;">
+        Compare today’s intake with your target macros and calories.
+      </p>
+
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <thead>
+          <tr style="border-bottom:1px solid #e0e0e0; color:#777;">
+            <th align="left" style="padding:0.5rem 0.25rem;">Metric</th>
+            <th align="right" style="padding:0.5rem 0.25rem;">Today</th>
+            <th align="right" style="padding:0.5rem 0.25rem;">Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:0.45rem 0.25rem;">Calories</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ calories_today }}</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ profile.daily_calorie_goal or '—' }}</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:0.45rem 0.25rem;">Protein (g)</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ protein_today }}</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ profile.daily_protein_goal_g or '—' }}</td>
+          </tr>
+          <tr>
+            <td style="padding:0.45rem 0.25rem;">Carbs (g)</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ carbs_today }}</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ profile.daily_carb_goal_g or '—' }}</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:0.45rem 0.25rem;">Fats (g)</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ fats_today }}</td>
+            <td align="right" style="padding:0.45rem 0.25rem;">{{ profile.daily_fat_goal_g or '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Profile Snapshot -->
+    <div style="
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.06);
+      padding:1.7rem 1.5rem;
+    ">
+      <h2 style="font-size:1.2rem; font-weight:600; margin-bottom:0.5rem; color:#212529;">
+        Profile Snapshot
+      </h2>
+      <p style="font-size:0.9rem; color:#555; line-height:1.7;">
+        <strong>Goal:</strong> {{ profile.fitness_goal or '—' }}<br>
+        <strong>Activity Level:</strong> {{ profile.activity_level or '—' }}<br>
+        <strong>Workout Days:</strong> {{ profile.workout_days or '—' }}<br>
+        <strong>Target Weight:</strong> {{ profile.target_weight_kg or '—' }} kg<br>
+        <strong>Diet Type:</strong> {{ profile.diet_type or '—' }}<br>
+        <strong>Allergies:</strong> {{ profile.allergies or 'None' }}
+      </p>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Recent Meals -->
+  <section style="margin-bottom: 2.5rem;">
+    <h2 style="font-size:1.2rem; font-weight:600; margin-bottom:0.75rem; color:#212529;">
+      Recent Meals (Last 7 Days)
+    </h2>
+    {% if recent_meals %}
+      <div style="
+        background:#fff;
+        border-radius:16px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.06);
+        overflow:hidden;
+      ">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+          <thead style="background:#f1f3f5; color:#555;">
+            <tr>
+              <th align="left" style="padding:0.6rem 0.75rem;">Date</th>
+              <th align="left" style="padding:0.6rem 0.75rem;">Meal</th>
+              <th align="left" style="padding:0.6rem 0.75rem;">Type</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Calories</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Protein</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Carbs</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Fats</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for meal in recent_meals %}
+            <tr style="border-top:1px solid #eee;">
+              <td style="padding:0.5rem 0.75rem;">{{ meal.date }}</td>
+              <td style="padding:0.5rem 0.75rem;">{{ meal.meal_name }}</td>
+              <td style="padding:0.5rem 0.75rem;">{{ meal.meal_type }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ meal.calories }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ meal.protein_g }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ meal.carbs_g }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ meal.fats_g }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p style="color:#777; font-size:0.95rem;">No meals logged in the last 7 days.</p>
+    {% endif %}
+  </section>
+
+  <!-- Recent Workouts -->
+  <section style="margin-bottom: 1.5rem;">
+    <h2 style="font-size:1.2rem; font-weight:600; margin-bottom:0.75rem; color:#212529;">
+      Recent Workouts (Last 7 Days)
+    </h2>
+    {% if recent_workouts %}
+      <div style="
+        background:#fff;
+        border-radius:16px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.06);
+        overflow:hidden;
+      ">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+          <thead style="background:#f1f3f5; color:#555;">
+            <tr>
+              <th align="left" style="padding:0.6rem 0.75rem;">Date</th>
+              <th align="left" style="padding:0.6rem 0.75rem;">Workout</th>
+              <th align="left" style="padding:0.6rem 0.75rem;">Muscle Group</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Sets</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Reps</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Minutes</th>
+              <th align="right" style="padding:0.6rem 0.75rem;">Intensity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for w in recent_workouts %}
+            <tr style="border-top:1px solid #eee;">
+              <td style="padding:0.5rem 0.75rem;">{{ w.date }}</td>
+              <td style="padding:0.5rem 0.75rem;">{{ w.workout_name }}</td>
+              <td style="padding:0.5rem 0.75rem;">{{ w.muscle_group }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ w.sets }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ w.reps }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ w.duration_minutes }}</td>
+              <td align="right" style="padding:0.5rem 0.75rem;">{{ w.intensity }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p style="color:#777; font-size:0.95rem;">No workouts logged in the last 7 days.</p>
+    {% endif %}
+  </section>
+
+  {% endif %}
+</div>
+
 {% endblock %}
