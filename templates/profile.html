@@ -1,6 +1,126 @@
 {% extends "base.html" %}
-{% block title %}Profile | Stay Balanced{% endblock %}
+
+{% block title %}Stay Balanced | Profile{% endblock %}
+
+{% block head %}
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Stay Balanced | Profile</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+	<style>
+		/* Reused global styles from index.html (trimmed to what's needed) */
+		*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
+		body{background:#f8f9fa;color:#222;line-height:1.6}
+		a{text-decoration:none;color:inherit}
+		/* navbar styles are provided by base.html; avoid overriding them here */
+
+		/* Profile header */
+		.profile-header{background:#e9ecef;padding:2.5rem 2rem;border-bottom:6px solid #dee2e6}
+		.profile-top{display:flex;gap:2rem;align-items:center;max-width:1100px;margin:0 auto}
+		.avatar{width:120px;height:120px;border-radius:8px;background:linear-gradient(135deg,#00c897,#007bff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.6rem}
+		.profile-main{flex:1}
+		.profile-main h2{font-size:1.8rem;margin-bottom:0.25rem}
+		.profile-main p{color:#495057;margin-bottom:1rem}
+		.profile-actions{display:flex;gap:0.75rem}
+		.btn{background:#fff;border:2px solid #343a40;padding:0.4rem 0.9rem;border-radius:6px;font-weight:600}
+		.btn.ghost{background:transparent;border-color:#343a40;color:#343a40}
+
+		/* Content grid */
+		.container{max-width:1100px;margin:1.5rem auto;padding:0 1rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+		.card{background:#fff;border-radius:8px;padding:1.1rem;border:1px solid #e9ecef}
+		.section-title{font-size:1.25rem;margin-bottom:0.75rem;color:#222;font-weight:600}
+
+		.personal-list{display:grid;gap:0.6rem}
+		.personal-list .row{display:flex;justify-content:space-between;color:#444}
+
+		.activity ul{list-style:none;color:#333}
+		.activity li{display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px dashed #eee}
+
+		/* Achievements */
+		.achievements{display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem}
+		.badge{background:#f1f3f5;border:2px dashed #dee2e6;height:86px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#555}
+		.badge small{margin-top:0.5rem;font-size:0.85rem}
+
+		/* Big footer band */
+		footer{background:#212529;color:#fff;text-align:center;padding:1.5rem;margin-top:1.5rem}
+
+		@media (max-width:840px){
+			.container{grid-template-columns:1fr}
+			.achievements{grid-template-columns:repeat(2,1fr)}
+			.profile-top{flex-direction:column;align-items:flex-start}
+			.avatar{width:100px;height:100px}
+		}
+	</style>
+{% endblock %}
+
 {% block content %}
-  <h1>Your Profile</h1>
-  <p>Survey results, goals, and account settings go here.</p>
+	<header class="profile-header">
+		<div class="profile-top">
+			<div class="avatar">{{ user.name[0]|upper }}</div>
+			<div class="profile-main">
+				<h2>{{ user.name }}</h2>
+				<p>{{ user.email }}</p>
+				<div class="profile-actions">
+					<a href="{{ url_for('profile_edit') }}" class="btn">Edit Profile</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main class="container">
+		<section class="card">
+			<div class="section-title">Personal Info</div>
+			<div class="personal-list">
+				<div class="row"><span>Name:</span><span>{{ user.name }}</span></div>
+				<div class="row"><span>Email:</span><span>{{ user.email }}</span></div>
+				<div class="row"><span>Height:</span><span>{% if profile and profile.height_cm %}{{ profile.height_cm }} cm{% else %}N/A{% endif %}</span></div>
+				<div class="row"><span>Weight:</span><span>{% if profile and profile.current_weight_kg %}{{ profile.current_weight_kg }} kg{% else %}N/A{% endif %}</span></div>
+			</div>
+
+			<hr style="margin:1rem 0;border:none;border-top:1px solid #eef;">
+
+			<div class="section-title">Activity Summary</div>
+			<div class="activity">
+				<ul>
+					<li><span>Last Workout</span><span>{{ last_workout }}</span></li>
+					<li><span>Meals Logged</span><span>{{ meals_logged }} this week</span></li>
+					<li><span>Weekly Goal</span><span>{% if weekly_goal_pct is not none %}{{ weekly_goal_pct }}% complete{% else %}N/A{% endif %}</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<aside class="card">
+		<div class="section-title">Achievements</div>
+		<div class="achievements">
+
+			<div class="badge" style="opacity: {{ 1 if achievements['workouts_10'] else 0.4 }}">
+				<i class="fas fa-check-square fa-2x"></i>
+				<small>10 Workouts</small>
+			</div>
+
+			<div class="badge" style="opacity: {{ 1 if achievements['meals_10'] else 0.4 }}">
+				<i class="fas fa-utensils fa-2x"></i>
+				<small>10 Meals Logged</small>
+			</div>
+
+			<div class="badge" style="opacity: {{ 1 if achievements['streak_3'] else 0.4 }}">
+				<i class="fas fa-fire fa-2x"></i>
+				<small>3-Day Streak</small>
+			</div>
+
+			<div class="badge" style="opacity: {{ 1 if achievements['high_intensity'] else 0.4 }}">
+				<i class="fas fa-heartbeat fa-2x"></i>
+				<small>High Intensity</small>
+			</div>
+
+			<div class="badge" style="opacity: {{ 1 if achievements['balanced_plate'] else 0.2 }}">
+				<i class="fas fa-clipboard fa-2x"></i>
+				<small>Balanced Plate</small>
+			</div>
+
+		</div>
+	</aside>
+
+	</main>
 {% endblock %}

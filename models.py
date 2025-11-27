@@ -11,7 +11,6 @@ class User(db.Model):
     name = db.Column(db.String(80))
     created_at = db.Column(db.DateTime)
 
-
 class UserProfile(db.Model):
     __tablename__ = "user_profile"
 
@@ -24,6 +23,8 @@ class UserProfile(db.Model):
     notifications_enabled = db.Column(db.Boolean, default=False)
 
     target_weight_kg = db.Column(db.Float)
+    height_cm = db.Column(db.Float)
+    current_weight_kg = db.Column(db.Float)
     daily_calorie_goal = db.Column(db.Integer)
     daily_protein_goal_g = db.Column(db.Integer)
     daily_carb_goal_g = db.Column(db.Integer)

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<main style="max-width:720px;margin:2rem auto;padding:1rem">
+  <h2>Edit Profile</h2>
+  <form method="post" action="{{ url_for('profile_edit') }}">
+    <div style="margin:0.6rem 0">
+      <label>Name</label><br>
+      <input type="text" name="name" value="{{ user.name if user else '' }}" style="width:100%;padding:0.5rem" />
+    </div>
+
+    <div style="display:flex;gap:0.6rem">
+      <div style="flex:1">
+        <label>Height (cm)</label><br>
+        <input type="text" name="height" value="{{ profile.height_cm if profile and profile.height_cm is not none else '' }}" style="width:100%;padding:0.5rem" />
+      </div>
+      <div style="flex:1">
+        <label>Weight (kg)</label><br>
+        <input type="text" name="weight" value="{{ profile.current_weight_kg if profile and profile.current_weight_kg is not none else '' }}" style="width:100%;padding:0.5rem" />
+      </div>
+    </div>
+
+    <div style="margin:0.6rem 0">
+      <label>Fitness Goal</label><br>
+      <input type="text" name="goal" value="{{ profile.fitness_goal if profile else '' }}" style="width:100%;padding:0.5rem" />
+    </div>
+
+    <div style="margin:0.6rem 0">
+      <label>Workout Days (comma separated, e.g. Mon, Wed, Fri)</label><br>
+      <input type="text" name="workout_days" value="{{ profile.workout_days if profile else '' }}" style="width:100%;padding:0.5rem" />
+    </div>
+
+    <div style="margin-top:1rem;display:flex;gap:0.6rem">
+      <button type="submit" class="btn">Save</button>
+      <a href="{{ url_for('profile') }}" class="btn ghost">Cancel</a>
+    </div>
+  </form>
+</main>
+{% endblock %}
