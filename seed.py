@@ -14,13 +14,13 @@ def seed():
             email="test@staybalanced.com",
             password_hash="test123",  # TODO: hash later
             name="Test User",
-            created_at=datetime.now()
+            created_at=datetime.now(),
         )
         user2 = User(
             email="demo@staybalanced.com",
             password_hash="demo123",  # TODO: hash later
             name="Demo User",
-            created_at=datetime.now()
+            created_at=datetime.now(),
         )
 
         db.session.add_all([user1, user2])
@@ -37,6 +37,8 @@ def seed():
             workout_days="Mon,Wed,Fri",
             notifications_enabled=True,
             target_weight_kg=80,
+            current_weight_kg=78,
+            height_cm=178,
             daily_calorie_goal=2600,
             daily_protein_goal_g=150,
             daily_carb_goal_g=260,
@@ -52,6 +54,8 @@ def seed():
             workout_days="Tue,Thu,Sat",
             notifications_enabled=False,
             target_weight_kg=65,
+            current_weight_kg=72,
+            height_cm=165,
             daily_calorie_goal=1900,
             daily_protein_goal_g=110,
             daily_carb_goal_g=180,
