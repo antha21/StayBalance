@@ -8,7 +8,7 @@
 
   <!-- Gradient Header -->
   <section style="
-    background: linear-gradient(135deg, #00c897, #007bff);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     padding: 2.5rem 1.75rem;
     color: #fff;
     border-radius: 18px;
@@ -62,13 +62,13 @@
         height: 5px;
         border-radius: 999px;
         margin-bottom: 0.75rem;
-        background: linear-gradient(90deg, #007bff, #00c897);
+        background: linear-gradient(90deg, var(--secondary), var(--primary));
       "></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:0.9rem; color:#777;">Calories Today</h3>
         <i class="fas fa-fire" style="color:#ff9800; font-size:1.1rem;"></i>
       </div>
-      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#00c897;">
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:var(--primary);">
         {{ calories_today }}
       </p>
     </div>
@@ -84,13 +84,13 @@
         height: 5px;
         border-radius: 999px;
         margin-bottom: 0.75rem;
-        background: linear-gradient(90deg, #00c897, #007bff);
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
       "></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:0.9rem; color:#777;">Protein Today (g)</h3>
-        <i class="fas fa-drumstick-bite" style="color:#00c897; font-size:1.1rem;"></i>
+        <i class="fas fa-drumstick-bite" style="color:var(--primary); font-size:1.1rem;"></i>
       </div>
-      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#007bff;">
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:var(--secondary);">
         {{ protein_today }}
       </p>
     </div>
@@ -106,13 +106,13 @@
         height: 5px;
         border-radius: 999px;
         margin-bottom: 0.75rem;
-        background: linear-gradient(90deg, #007bff, #00c897);
+        background: linear-gradient(90deg, var(--secondary), var(--primary));
       "></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:0.9rem; color:#777;">Workouts (Last 7 Days)</h3>
-        <i class="fas fa-dumbbell" style="color:#007bff; font-size:1.1rem;"></i>
+        <i class="fas fa-dumbbell" style="color:var(--secondary); font-size:1.1rem;"></i>
       </div>
-      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#00c897;">
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:var(--primary);">
         {{ workouts_last_week }}
       </p>
     </div>
@@ -128,13 +128,13 @@
         height: 5px;
         border-radius: 999px;
         margin-bottom: 0.75rem;
-        background: linear-gradient(90deg, #00c897, #007bff);
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
       "></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:0.9rem; color:#777;">Workout Minutes (7 Days)</h3>
         <i class="fas fa-stopwatch" style="color:#ff9800; font-size:1.1rem;"></i>
       </div>
-      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:#007bff;">
+      <p style="font-size:1.7rem; font-weight:600; margin-top:0.35rem; color:var(--secondary);">
         {{ workout_minutes_last_week }}
       </p>
     </div>
