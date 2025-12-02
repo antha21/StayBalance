@@ -585,7 +585,7 @@ def survey():
         userProfile.fitness_goal = request.form.get("fitness_goal")
         
 
-        print(request.form.getlist("dietary_restrictions"))
+        # print(request.form.getlist("dietary_restrictions"))
         userProfile.allergies = "None"
         userProfile.diet_type = ""
         for item in request.form.getlist("dietary_restrictions"):
@@ -595,6 +595,17 @@ def survey():
                     userProfile.allergies = item+","
                 else:
                     userProfile.allergies += item+","
+
+        
+        userProfile.current_weight_kg = float(request.form.get("current_weight_kg")) if request.form.get("current_weight_kg") else 0
+        userProfile.target_weight_kg = float(request.form.get("target_weight_kg")) if request.form.get("target_weight_kg") else 0
+        userProfile.height_cm = float(request.form.get("height_cm")) if request.form.get("height_cm") else 0
+
+        # --- Nutrition Goals ---
+        userProfile.daily_calorie_goal = int(request.form.get("daily_calorie_goal")) if request.form.get("daily_calorie_goal") else 0
+        userProfile.daily_protein_goal_g = int(request.form.get("daily_protein_goal_g")) if request.form.get("daily_protein_goal_g") else 0
+        userProfile.daily_carb_goal_g = int(request.form.get("daily_carb_goal_g")) if request.form.get("daily_carb_goal_g") else 0
+        userProfile.daily_fat_goal_g = int(request.form.get("daily_fat_goal_g")) if request.form.get("daily_fat_goal_g") else 0
 
         db.session.commit()
         return redirect(url_for("profile"))
@@ -629,7 +640,7 @@ def signup():
         activity_level="...",
         diet_type="...",
         allergies="...",
-        workout_days="...",
+        workout_days="None",
         notifications_enabled=False,
         target_weight_kg=0,
         current_weight_kg=0,
