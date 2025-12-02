@@ -7,6 +7,7 @@ from datetime import date, timedelta, datetime, time
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SESSION_PERMANENT"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "fitmeal.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "change_this_later"
@@ -19,7 +20,17 @@ def home():
 
 @app.route("/fitness", methods=["POST", "GET"])
 def fitness():
-    user_id = 1
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+    user_id = targetId
     workouts = (
         db.session.query(WorkoutEntry)
         .filter(WorkoutEntry.user_id == user_id)
@@ -71,7 +82,17 @@ def fitness():
 
 @app.route("/fitness/edit", methods=["POST", "GET"])
 def edit_workout():
-    user_id = 1
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+    user_id = targetId
     if request.method == "GET":
         workout = db.session.query(WorkoutEntry).filter(WorkoutEntry.user_id == user_id, WorkoutEntry.id == request.args.get("workout")).one_or_none()
         if workout != None:
@@ -112,7 +133,17 @@ def edit_workout():
 
 @app.route("/meals", methods=["POST", "GET"])
 def meals():
-    user_id = 1
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+    user_id = targetId
     query = (
         db.session.query(MealEntry)
         .filter(MealEntry.user_id == user_id)
@@ -173,7 +204,17 @@ def meals():
 
 @app.route("/meals/edit", methods=["POST", "GET"])
 def new_meal():
-    user_id = 1
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+    user_id = targetId
     if request.method == "GET":
         meal = db.session.query(MealEntry).filter(MealEntry.user_id == user_id, MealEntry.id == request.args.get("meal")).one_or_none()
         if meal != None:
@@ -212,7 +253,17 @@ def new_meal():
 
 @app.route("/stats")
 def stats():
-    user_id = 1
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+    user_id = targetId
 
     if not user_id:
         # Later: redirect to login or show message
@@ -299,7 +350,16 @@ def stats():
 
 @app.route("/profile")
 def profile():
-    user = User.query.first()
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
     if not user:
         return render_template(
             "profile.html",
@@ -416,7 +476,17 @@ def profile():
 
 @app.route("/profile/edit", methods=["GET", "POST"])
 def profile_edit():
-    user = User.query.first()
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+    # user = User.query.first()
     if not user:
         flash("No user exists to edit.")
         return redirect(url_for("profile"))
@@ -455,12 +525,88 @@ def profile_edit():
 
     return render_template("profile_edit.html", user=user, profile=profile)
 
+@app.route("/login",methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        
+        # print(session)
+        try:
+            if not (session["user_id"] is None):
+                return redirect(url_for("profile"))
+        except:
+            print("User has not logged in.")
+
+        return render_template("login.html")
+
+    username = request.form.get("username")
+    passwd = request.form.get("password")
+
+    user = User.query.filter(
+        ((User.email == username) | (User.name == username)) & (User.password_hash == passwd) # 100% secure login 👍
+    ).first()
+
+    if not (user is None):
+        session["user_id"] = user.id
+        return redirect(url_for("profile"))
+
+    return redirect(url_for("login"))
+
+@app.route("/logout",methods=["GET"])
+def logout():
+    session.pop("user_id",None)
+    return redirect(url_for("login"))
+
 @app.route("/survey", methods=["GET", "POST"])
 def survey():
     if request.method == "POST":
         # later: save to DB
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
     return render_template("survey.html")
+
+@app.route("/signup",methods=["GET","POST"])
+def signup():
+    if request.method == "GET":
+        return render_template("signup.html")
+
+    Email = request.form.get("username")
+    passwd = request.form.get("password")
+    name = request.form.get("name")
+
+    user3 = User(
+        email=Email,
+        password_hash=passwd,  # TODO: hash later
+        name=name,
+        created_at=datetime.now(),
+    )    
+
+    try:
+        db.session.add(user3)
+        db.session.commit()      
+    except:
+        # flash("Email already exists...")
+        return redirect(url_for("signup"))
+
+    profile = UserProfile(
+        user_id = user3.id,
+        fitness_goal="...",
+        activity_level="...",
+        diet_type="...",
+        allergies="...",
+        workout_days="...",
+        notifications_enabled=False,
+        target_weight_kg=0,
+        current_weight_kg=0,
+        height_cm=0,
+        daily_calorie_goal=0,
+        daily_protein_goal_g=0,
+        daily_carb_goal_g=0,
+        daily_fat_goal_g=0,
+    )
+    db.session.add(profile)
+    db.session.commit()
+
+    session["user_id"] = user3.id
+    return redirect(url_for("survey"))
 
 
 if __name__ == "__main__":
