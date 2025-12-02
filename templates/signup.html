@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Stay Balanced | Learn. Train. Enjoy.{% endblock %}
+
+{% block content %}
+
+    <section class="hero" style=" height: 100%;">
+        <!-- <h1>LOGIN</h1> -->
+        <div class="info-box" style="max-width: max-content; max-height: 100%; padding-bottom: 2rem;"> <!--  -->
+            <h1 style="color: black">Welcome!</h1>
+
+            <form method="POST" action="{{ url_for('signup') }}" style="display: flex; flex-direction: column; gap: 1.2rem;">
+
+            <!-- Username -->
+            <div style="text-align: left;">
+                <label style="font-weight: 600; color: #444;">Email</label>
+                <input type="text" 
+                        name="username"
+                        required
+                        style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid #ccc; font-size: 0.95rem;">
+            </div>
+
+            <div style="text-align: left;">
+                <label style="font-weight: 600; color: #444;">Username</label>
+                <input type="text" 
+                        name="name"
+                        required
+                        style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid #ccc; font-size: 0.95rem;">
+            </div>
+
+            <!-- Password -->
+            <div style="text-align: left; position: relative;">
+                <label style="font-weight: 600; color: #444;">Password</label>
+            
+                <input type="password"
+                       id="passwordInput"
+                       name="password"
+                       required
+                       style="width: 100%; padding: 0.8rem 2.5rem 0.8rem 0.8rem;
+                              border-radius: 10px; border: 1px solid #ccc;
+                              font-size: 0.95rem;">
+            
+            </div>
+            
+            
+
+            <!-- Login Button -->
+            <button type="submit"
+                    style="padding: 0.9rem; border: none; border-radius: 30px;
+                            background-color: var(--primary); color: white;
+                            font-size: 1rem; font-weight: 600;
+                            transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.2);">
+                Signup
+            </button>
+        </div>
+
+            
+        </div>
+        
+    </section>
+
+
+{% endblock %}
