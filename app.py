@@ -558,8 +558,45 @@ def logout():
 
 @app.route("/survey", methods=["GET", "POST"])
 def survey():
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+
+    # print(user)
+    userProfile = UserProfile.query.filter(
+        UserProfile.user_id == targetId
+    ).first()
+
+    # print(userProfile)
+
     if request.method == "POST":
         # later: save to DB
+        # print(userProfile)
+        # print(request.form.get("activity_level"))
+        userProfile.activity_level = request.form.get("activity_level")
+        # print(request.form.get("fitness_goal"))
+        userProfile.fitness_goal = request.form.get("fitness_goal")
+        
+
+        print(request.form.getlist("dietary_restrictions"))
+        userProfile.allergies = "None"
+        userProfile.diet_type = ""
+        for item in request.form.getlist("dietary_restrictions"):
+            userProfile.diet_type += item+","
+            if (item in ["Gluten-Free","Dairy-Free","Nut Allergy"]):
+                if (userProfile.allergies == "None"):
+                    userProfile.allergies = item+","
+                else:
+                    userProfile.allergies += item+","
+
+        db.session.commit()
         return redirect(url_for("profile"))
     return render_template("survey.html")
 
