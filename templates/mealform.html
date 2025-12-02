@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}Meal Planner | Stay Balanced{% endblock %}
+
+{% block head %}
+<style>
+	#date-cards {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		width: 60%;
+		margin: 16px;
+	}
+
+	#today-stats {
+		display: flex;
+		width: 40%;
+	}
+
+	.page-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		margin: 20px;
+		position: relative;
+	}
+
+	.floater-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
+		font-size: 1rem;
+		background-color: white;
+		color: var(--primary);
+		border: none;
+		border-radius: 30px;
+		font-weight: 600;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+		position: fixed;
+		bottom: 16px;
+		right: 16px;
+	}
+
+	.floater-button:hover {
+		background-color: var(--primary);
+		color: white;
+		transform: scale(1.1);
+		transition: 0.3s;
+	}
+
+	form {
+		padding: 16px 32px 16px 32px;
+		background-color: white;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+	}
+
+	input {
+		padding: 8px 2px 8px 2px;
+		width: 100%;
+	}
+
+	.submit-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1rem;
+		background-color: white;
+		color: var(--primary);
+		border: none;
+		border-radius: 30px;
+		font-weight: 600;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+	}
+
+	.submit-button:hover {
+		background-color: var(--primary);
+		color: white;
+		transform: scale(1.1);
+		transition: 0.3s;
+	}
+
+	.delete-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1rem;
+		background-color: white;
+		color: red;
+		border: none;
+		border-radius: 30px;
+		font-weight: 600;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+	}
+
+	.delete-button:hover {
+		background-color: red;
+		color: white;
+		transform: scale(1.1);
+		transition: 0.3s;
+	}
+
+	.floater-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
+		font-size: 1rem;
+		background-color: white;
+		color: grey;
+		border: none;
+		border-radius: 30px;
+		font-weight: 600;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+		position: fixed;
+		bottom: 16px;
+		right: 16px;
+	}
+
+	.floater-button:hover {
+		background-color: grey;
+		color: white;
+		transform: scale(1.1);
+		transition: 0.3s;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section style="
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 1rem 3rem;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    margin-bottom: 0.5rem;
+  ">
+	<h1>Meal Planner</h1>
+	<p>Here you’ll add meals and track calories/macros.</p>
+</section>
+
+<div class="page-container">
+	<a class="floater-button" href="/meals"><i class="fa-solid fa-close"></i></a>
+<form action="/meals/edit" method="POST">
+    {% if meal != None %}
+		<h2>Editing {{meal.meal_name}}...</h2>
+		{% else %}
+		<h2>Creating meal...</h2>
+		{% endif %}
+        <h4>What's your meal?</h4>
+        <input type="text" name="meal_name" value="{{meal.meal_name}}" required>
+		<br>
+		<br>
+		<h4>What are you having it for?</h4>
+		<select name="meal_type"  value="{{meal.meal_type}}" required>
+			<option value="Breakfast" {% if meal.meal_type == "Breakfast" %} selected="true" {% endif %}>Breakfast</option>
+			<option value="Lunch" {% if meal.meal_type == "Lunch" %} selected="true" {% endif %}>Lunch</option>
+			<option value="Dinner" {% if meal.meal_type == "Dinner" %} selected="true" {% endif %}>Dinner</option>
+			<option value="Snack" {% if meal.meal_type == "Snack" %} selected="true" {% endif %}>Snack</option>
+		</select>
+
+		<br>
+		<br>
+		<h4>How many calories?</h4>
+		<input type="number" name="calories" value="{{meal.calories}}" style="width:25%">
+		<br>
+		<br>
+		<h4>How many grams of protein?</h4>
+		<input type="number" name="protein_g" value="{{meal.protein_g}}" style="width:25%">
+		<br>
+		<br>
+		<h4>How many grams of carbohydrates?</h4>
+		<input type="number" name="carbs_g" value="{{meal.carbs_g}}" style="width:25%">
+		<br>
+		<br>
+		<h4>How many grams of fat?</h4>
+		<input type="number" name="fats_g" value="{{meal.fats_g}}" style="width:25%">
+		<br>
+		<br>
+		<h4>When are you having this meal?</h4>
+		<input type="date" name="date" value="{{meal.date}}">
+		<br>
+		<br>
+    <input type="submit" value="Submit" class="submit-button" />
+		<br>
+		<a class="delete-button" id="delete">Delete</a>
+</form>
+</div>
+
+<script>
+	function deleteButtonHandler(element) {
+		let hovered = false;
+		let clickedonce = false;
+		const defaulttext = element.textContent;
+
+		element.addEventListener("mouseenter", () => {
+			hovered = true;
+			element.textContent = "Delete?";
+		});
+
+		element.addEventListener("mouseleave", () => {
+			hovered = false;
+			clickedonce = false;
+			element.textContent = defaulttext;
+		});
+
+
+		element.addEventListener("click", () => {
+			if (hovered && clickedonce) {
+				fetch("/meals/edit", {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(
+						{
+							"delete": true
+						}
+					)
+				}
+				);
+				window.location.href = "/meals";
+			} else if (hovered) {
+				clickedonce = true;
+				element.textContent = "Click again to confirm.";
+			}
+		}
+		);
+	}
+	deleteButtonHandler(document.getElementById("delete"));
+</script>
+{% endblock %}

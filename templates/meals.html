@@ -1,6 +1,204 @@
 {% extends "base.html" %}
 {% block title %}Meal Planner | Stay Balanced{% endblock %}
+
+{% block head %}
+<style>
+	#date-cards {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 16px;
+		width: 60%;
+		margin: 16px;
+	}
+
+	#today-stats {
+		width: 40%;
+		margin: 16px;
+	}
+
+	.page-container {
+		display: flex;
+		width: 100%;
+		position: relative;
+	}
+
+
+
+	.agenda-card {
+		background: white;
+		border-radius: 15px;
+		padding: 2rem;
+		width: 80%;
+		text-align: center;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+		transition: all 0.4s ease;
+		position: relative;
+	}
+
+	.agenda-card-datestamp {
+		background: linear-gradient(135deg, var(--primary), var(--secondary));
+		border-radius: 15px;
+		width: 4rem;
+		height: 4rem;
+		color: black;
+	}
+
+	.agenda-card-datestamp h1 {
+		line-height: 1.5rem;
+	}
+
+	.agenda-card:hover {
+
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+	}
+
+	.agenda-card h3 {
+		color: #00c897;
+		margin-bottom: 1rem;
+		font-weight: 600;
+		font-size: 1.4rem;
+	}
+
+	.agenda-card p {
+		font-size: 0.95rem;
+		color: #555;
+	}
+
+	.agenda-card i {
+		font-size: 2rem;
+
+		margin-bottom: 1rem;
+	}
+
+	.agenda-card-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.floater-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 4rem;
+		height: 4rem;
+		font-size: 1rem;
+		background-color: white;
+		color: var(--primary);
+		border: none;
+		border-radius: 30px;
+		font-weight: 600;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+		position: fixed;
+		bottom: 16px;
+		right: 16px;
+	}
+
+	.floater-button:hover {
+		background-color: var(--primary);
+		color: white;
+		transform: scale(1.1);
+		transition: 0.3s;
+	}
+
+	input[type="checkbox"] {
+		accent-color: var(--primary);
+		transform: scale(2.0);
+	}
+
+	.edit-button i {
+		color: lightgrey;
+		font-size: 1.5rem;
+	}
+
+	.item {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin: 16px;
+	}
+
+	.calorie-count {
+		color: #ff9800;
+	}
+
+	.button {
+		width: 50%;
+		padding: 8px;
+		margin: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1rem;
+		background-color: white;
+		color: var(--primary);
+		border: none;
+		border-radius: 30px;
+		font-weight: 600;
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+	}
+
+	.button:hover {
+		background-color: var(--primary);
+		color: white;
+		transform: scale(1.1);
+		transition: 0.3s;
+	}
+</style>
+{% endblock %}
+
 {% block content %}
-  <h1>Meal Planner</h1>
-  <p>Here you’ll add meals and track calories/macros.</p>
+<section style="
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 1rem 3rem;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    margin-bottom: 0.5rem;
+  ">
+	<h1>Meal Planner</h1>
+	<p>Here you’ll add meals and track calories/macros.</p>
+</section>
+
+
+<div class="page-container">
+	<section id="date-cards">
+		<a class="floater-button" href="/meals/edit"><i class="fa-solid fa-plus"></i></a>
+
+		{% for date in dates %}
+		<div class="agenda-card">
+
+			<div class="agenda-card-header">
+				<div class="agenda-card-datestamp">
+					<sub>{{date.month}}</sub>
+					<h1>{{date.day}}</h1>
+				</div>
+				<h1>{{date.day_of_week}}</h1>
+			</div>
+			{% for meal in date.meals %}
+			<div class="item">
+				<a class="edit-button" href="/meals/edit?meal={{meal.id}}">
+					<i class="fa-solid fa-edit"></i>
+				</a>
+				<input type="checkbox" checked="true" />
+				<p>{{meal.meal_type}}: {{meal.meal_name}}</p>
+			</div>
+			{% endfor %}
+
+		</div>
+		{% endfor %}
+
+	</section>
+	<section id="today-stats">
+		<h1>{{greeting}}</h1>
+		<br>
+		<div style="display: inline;">
+			<h2>You've had </h2>
+			<h2 class="calorie-count">{{calorie_count}} kcal</h2>
+			<h2> today.</h2>
+		</div>
+		<a href="/stats" class="button">View more in stats ></a>
+	</section>
+</div>
 {% endblock %}
