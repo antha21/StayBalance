@@ -488,7 +488,7 @@ def profile_edit():
     ).first()
     # user = User.query.first()
     if not user:
-        flash("No user exists to edit.")
+        # flash("No user exists to edit.")
         return redirect(url_for("profile"))
 
     profile = UserProfile.query.filter_by(user_id=user.id).first()
@@ -656,6 +656,28 @@ def signup():
     session["user_id"] = user3.id
     return redirect(url_for("survey"))
 
+@app.route("/forgot",methods=["GET","POST"])
+def forgot():
+    session.pop('_flashes', None)
+    if request.method == "GET":
+        return render_template("forgot.html")
+
+    got = request.form.get("username")
+
+    usernameRequest = "User does not exist."
+    try:
+        userTemp = User.query.filter(
+            (User.email == got) | (User.name == got)
+        ).first()
+    except Exception as e:
+        print(e)
+        return redirect(url_for("forgot"))
+
+    if not (userTemp is None):
+        flash("Password:"+str(userTemp.password_hash))
+        # return redirect(url_for("login"))
+
+    return render_template("forgot.html")
 
 if __name__ == "__main__":
     with app.app_context():
