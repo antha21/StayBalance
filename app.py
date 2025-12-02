@@ -455,6 +455,12 @@ def profile_edit():
 
     return render_template("profile_edit.html", user=user, profile=profile)
 
+@app.route("/survey", methods=["GET", "POST"])
+def survey():
+    if request.method == "POST":
+        # later: save to DB
+        return redirect(url_for("home"))
+    return render_template("survey.html")
 
 
 if __name__ == "__main__":

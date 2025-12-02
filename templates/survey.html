@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Fitness Survey | Stay Balanced{% endblock %}
+
+{% block head %}
+<style>
+  .survey-wrapper {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .survey-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    padding: 2rem 1.75rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    margin-bottom: 2rem;
+  }
+
+  .survey-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .survey-header p {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    opacity: 0.95;
+    max-width: 640px;
+  }
+
+  .survey-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 2rem 1.75rem 2.25rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  }
+
+  .survey-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-help {
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-select,
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    border: 1px solid #d0d7de;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+  }
+
+  .form-select:focus,
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 200, 151, 0.15);
+  }
+
+  .radio-group,
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.4rem 1.25rem;
+    margin-top: 0.2rem;
+  }
+
+  .radio-option,
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .radio-option input,
+  .checkbox-option input {
+    accent-color: var(--primary);
+  }
+
+  .form-textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .survey-submit {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .survey-submit button {
+    padding: 0.75rem 1.8rem;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+
+  .survey-submit button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+  }
+
+  @media (max-width: 768px) {
+    .survey-card {
+      padding: 1.6rem 1.25rem 2rem;
+    }
+
+    .survey-header {
+      padding: 1.7rem 1.25rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="survey-wrapper">
+
+  <!-- Header -->
+  <section class="survey-header">
+    <h1>Fitness Survey</h1>
+    <p>
+      Tell us about your activity level, goals, and dietary restrictions so we can build a personalized
+      fitness and meal plan that fits your lifestyle.
+    </p>
+  </section>
+
+  <!-- Survey Form -->
+  <section class="survey-card">
+    <form method="POST" action="{{ url_for('survey') }}">
+      {# If we later add CSRF, we can include a CSRF token here #}
+
+      <!-- Activity Level -->
+      <div class="form-group">
+        <label class="form-label" for="activity_level">Activity Level</label>
+        <p class="form-help">How active are you on a typical day?</p>
+        <select id="activity_level" name="activity_level" class="form-select" required>
+          <option value="" disabled selected>Select your activity level</option>
+          <option value="Sedentary">Sedentary (little or no exercise)</option>
+          <option value="Lightly Active">Lightly Active (1–2 days/week)</option>
+          <option value="Moderately Active">Moderately Active (3–4 days/week)</option>
+          <option value="Very Active">Very Active (5+ days/week)</option>
+        </select>
+      </div>
+
+      <!-- Fitness Goals -->
+      <div class="form-group">
+        <span class="form-label">Primary Fitness Goal</span>
+        <p class="form-help">What are you mainly hoping to achieve with Stay Balanced?</p>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="fitness_goal" value="Lose Weight" required>
+            <span>Lose Weight</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="fitness_goal" value="Build Muscle">
+            <span>Build Muscle</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="fitness_goal" value="Improve Endurance">
+            <span>Improve Endurance</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="fitness_goal" value="Maintain Health">
+            <span>Maintain Overall Health</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Dietary Restrictions -->
+      <div class="form-group">
+        <span class="form-label">Dietary Restrictions</span>
+        <p class="form-help">Let us know if there’s anything we should avoid including in your meal plan.</p>
+        <div class="checkbox-group">
+          <label class="checkbox-option">
+            <input type="checkbox" name="dietary_restrictions" value="None">
+            <span>No major restrictions</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="dietary_restrictions" value="Vegetarian">
+            <span>Vegetarian</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="dietary_restrictions" value="Vegan">
+            <span>Vegan</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="dietary_restrictions" value="Gluten-Free">
+            <span>Gluten-Free</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="dietary_restrictions" value="Dairy-Free">
+            <span>Dairy-Free</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="dietary_restrictions" value="Nut Allergy">
+            <span>Nut Allergy</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Optional Notes -->
+      <div class="form-group">
+        <label class="form-label" for="additional_notes">Anything else we should know?</label>
+        <p class="form-help">Injuries, schedule constraints, favorite activities, or specific preferences.</p>
+        <textarea id="additional_notes" name="additional_notes" class="form-textarea"
+          placeholder="Optional: Tell us anything that would help us tailor your plan."></textarea>
+      </div>
+
+      <div class="survey-submit">
+        <button type="submit">Save Survey & Continue</button>
+      </div>
+    </form>
+  </section>
+
+</div>
+
+{% endblock %}
