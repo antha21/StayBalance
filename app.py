@@ -563,7 +563,7 @@ def survey():
         if (session["user_id"]):
             targetId = session["user_id"]
     except:
-        return redirect(url_for("login"))
+        return redirect(url_for("signup"))
 
     user = User.query.filter(
         User.id == targetId
