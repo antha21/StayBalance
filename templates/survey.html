@@ -234,6 +234,49 @@
         </div>
       </div>
 
+      <!-- Physical Stats -->
+      <div class="form-group">
+        <span class="form-label">Your Physical Stats</span>
+        <p class="form-help">These help us calculate calories, macros, and workout planning.</p>
+
+        <!-- Current Weight -->
+        <label class="form-label" for="current_weight_kg">Current Weight (kg)</label>
+        <input type="number" step="0.1" min="0" id="current_weight_kg" name="current_weight_kg"
+              class="form-input" placeholder="e.g., 72.5" required>
+
+        <!-- Target Weight -->
+        <label class="form-label" for="target_weight_kg" style="margin-top: 0.8rem;">Target Weight (kg)</label>
+        <input type="number" step="0.1" min="0" id="target_weight_kg" name="target_weight_kg"
+              class="form-input" placeholder="e.g., 68">
+        
+        <!-- Height -->
+        <label class="form-label" for="height_cm" style="margin-top: 0.8rem;">Height (cm)</label>
+        <input type="number" min="0" id="height_cm" name="height_cm"
+              class="form-input" placeholder="e.g., 178" required>
+      </div>
+
+      <!-- Macro & Calorie Goals -->
+      <div class="form-group">
+        <span class="form-label">Daily Nutrition Goals</span>
+        <p class="form-help">Customize your calorie and macro targets (optional).</p>
+
+        <label class="form-label" for="daily_calorie_goal">Daily Calories</label>
+        <input type="number" min="0" id="daily_calorie_goal" name="daily_calorie_goal"
+              class="form-input" placeholder="e.g., 2200">
+
+        <label class="form-label" for="daily_protein_goal_g" style="margin-top: 0.8rem;">Protein (g)</label>
+        <input type="number" min="0" id="daily_protein_goal_g" name="daily_protein_goal_g"
+              class="form-input" placeholder="e.g., 150">
+
+        <label class="form-label" for="daily_carb_goal_g" style="margin-top: 0.8rem;">Carbs (g)</label>
+        <input type="number" min="0" id="daily_carb_goal_g" name="daily_carb_goal_g"
+              class="form-input" placeholder="e.g., 250">
+
+        <label class="form-label" for="daily_fat_goal_g" style="margin-top: 0.8rem;">Fat (g)</label>
+        <input type="number" min="0" id="daily_fat_goal_g" name="daily_fat_goal_g"
+              class="form-input" placeholder="e.g., 70">
+      </div>
+
       <!-- Optional Notes -->
       <div class="form-group">
         <label class="form-label" for="additional_notes">Anything else we should know?</label>

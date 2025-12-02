@@ -558,8 +558,56 @@ def logout():
 
 @app.route("/survey", methods=["GET", "POST"])
 def survey():
+    targetId = None
+    try:
+        if (session["user_id"]):
+            targetId = session["user_id"]
+    except:
+        return redirect(url_for("login"))
+
+    user = User.query.filter(
+        User.id == targetId
+    ).first()
+
+    # print(user)
+    userProfile = UserProfile.query.filter(
+        UserProfile.user_id == targetId
+    ).first()
+
+    # print(userProfile)
+
     if request.method == "POST":
         # later: save to DB
+        # print(userProfile)
+        # print(request.form.get("activity_level"))
+        userProfile.activity_level = request.form.get("activity_level")
+        # print(request.form.get("fitness_goal"))
+        userProfile.fitness_goal = request.form.get("fitness_goal")
+        
+
+        # print(request.form.getlist("dietary_restrictions"))
+        userProfile.allergies = "None"
+        userProfile.diet_type = ""
+        for item in request.form.getlist("dietary_restrictions"):
+            userProfile.diet_type += item+","
+            if (item in ["Gluten-Free","Dairy-Free","Nut Allergy"]):
+                if (userProfile.allergies == "None"):
+                    userProfile.allergies = item+","
+                else:
+                    userProfile.allergies += item+","
+
+        
+        userProfile.current_weight_kg = float(request.form.get("current_weight_kg")) if request.form.get("current_weight_kg") else 0
+        userProfile.target_weight_kg = float(request.form.get("target_weight_kg")) if request.form.get("target_weight_kg") else 0
+        userProfile.height_cm = float(request.form.get("height_cm")) if request.form.get("height_cm") else 0
+
+        # --- Nutrition Goals ---
+        userProfile.daily_calorie_goal = int(request.form.get("daily_calorie_goal")) if request.form.get("daily_calorie_goal") else 0
+        userProfile.daily_protein_goal_g = int(request.form.get("daily_protein_goal_g")) if request.form.get("daily_protein_goal_g") else 0
+        userProfile.daily_carb_goal_g = int(request.form.get("daily_carb_goal_g")) if request.form.get("daily_carb_goal_g") else 0
+        userProfile.daily_fat_goal_g = int(request.form.get("daily_fat_goal_g")) if request.form.get("daily_fat_goal_g") else 0
+
+        db.session.commit()
         return redirect(url_for("profile"))
     return render_template("survey.html")
 
@@ -592,7 +640,7 @@ def signup():
         activity_level="...",
         diet_type="...",
         allergies="...",
-        workout_days="...",
+        workout_days="None",
         notifications_enabled=False,
         target_weight_kg=0,
         current_weight_kg=0,
